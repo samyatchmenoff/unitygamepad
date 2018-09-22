@@ -26,6 +26,14 @@ public class Gamepad : MonoBehaviour {
     { "right", Button.Right },
     { "up", Button.Up },
     { "down", Button.Down },
+  #if UNITY_STANDALONE_WIN
+    { "joystick button 0", Button.B },
+    { "joystick button 1", Button.A },
+    { "joystick button 2", Button.B },
+    { "joystick button 3", Button.A },
+    { "joystick button 6", Button.Select },
+    { "joystick button 7", Button.Start },
+  #elif UNITY_STANDALONE_OSX
     { "joystick button 7", Button.Left },
     { "joystick button 8", Button.Right },
     { "joystick button 6", Button.Down },
@@ -36,9 +44,10 @@ public class Gamepad : MonoBehaviour {
     { "joystick button 17", Button.A },
     { "joystick button 18", Button.B },
     { "joystick button 19", Button.A },
+  #endif
   };
 
-	public void Update () {
+  public void Update () {
     var swap = buttonDownCounts;
     buttonDownCounts = prevButtonDownCounts;
     prevButtonDownCounts = swap;
@@ -53,11 +62,15 @@ public class Gamepad : MonoBehaviour {
       }
     }
 
-    if(Input.GetAxis("Horizontal") < -0.5) buttonDownCounts[(int)Button.Left]++;
-    if(Input.GetAxis("Horizontal") >  0.5) buttonDownCounts[(int)Button.Right]++;
-    if(Input.GetAxis("Vertical") < -0.5) buttonDownCounts[(int)Button.Up]++;
-    if(Input.GetAxis("Vertical") >  0.5) buttonDownCounts[(int)Button.Down]++;
-	}
+    if(Input.GetAxis("LeftX") < -0.5) buttonDownCounts[(int)Button.Left]++;
+    if(Input.GetAxis("LeftX") >  0.5) buttonDownCounts[(int)Button.Right]++;
+    if(Input.GetAxis("LeftY") < -0.5) buttonDownCounts[(int)Button.Up]++;
+    if(Input.GetAxis("LeftY") >  0.5) buttonDownCounts[(int)Button.Down]++;
+    if(Input.GetAxis("DPadX") < -0.5) buttonDownCounts[(int)Button.Left]++;
+    if(Input.GetAxis("DPadX") >  0.5) buttonDownCounts[(int)Button.Right]++;
+    if(Input.GetAxis("DPadY") < -0.5) buttonDownCounts[(int)Button.Up]++;
+    if(Input.GetAxis("DPadY") >  0.5) buttonDownCounts[(int)Button.Down]++;
+  }
 
   public static bool JustDown(Button button) {
     return buttonDownCounts[(int)button] > 0 && prevButtonDownCounts[(int)button] == 0;
